@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     stages {
-        stage('Delete PHP folder if it exists') {
+        stage('File') {
             steps {
                 sh '''
                 if [ -d "/var/lib/jenkins/DevOps/" ]; then
