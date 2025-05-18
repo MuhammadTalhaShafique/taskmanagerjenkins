@@ -1,0 +1,52 @@
+services:
+  frontend:
+    image: mtalhashafique/taskmanager-frontend-jenkins
+    container_name: frontend-react-jenkins
+    ports:
+      - "4000:80"
+    stdin_open: true
+    tty: true
+    depends_on:
+      - backend
+    networks:
+      - mern-network-jenkins
+    mem_limit: 256m
+    memswap_limit: 512m
+    restart: unless-stopped
+
+  backend:
+    image: mtalhashafique/taskmanager-backend-jenkins
+    container_name: backend-node-jenkins
+    ports:
+      - "6000:5000"
+    environment:
+      - JWT_SECRET=FP93ln7u7JsVjaYt4ZXm00pHF6LcNtNWvrIl1WBEwxc=
+      - MONGODB_URI=mongodb://mongo-db-jenkins/taskManagerJenkins
+    depends_on:
+      - mongo-db-jenkins
+    networks:
+      - mern-network-jenkins
+    mem_limit: 512m
+    memswap_limit: 1g
+    restart: unless-stopped
+
+  mongo-db-jenkins:
+    image: mongo:latest
+    container_name: mongo-db-jenkins
+    ports:
+      - "28017:27017"
+    volumes:
+      - mongo-backup:/data/db
+    networks:
+      - mern-network-jenkins
+    mem_limit: 512m
+    memswap_limit: 1g
+    restart: unless-stopped
+
+networks:
+  mern-network-jenkins:
+    driver: bridge
+
+volumes:
+  mongo-backup:
+    driver: local
